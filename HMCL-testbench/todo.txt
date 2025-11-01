@@ -1,0 +1,9 @@
+We have a bms board in office, it has 3 ntc temp sensors for cells, 2 hr and lr current sensors, and 1 temp sensor for pdu. Now we have a test bench that simulates 14 cells in series with voltage values going to BMS, 5 pots for the above mentioned sensors. Testing in this is tiresome, time consuming and pots are not good. So our plan is to remove pots and cells with single rpi pico controller that does all above job.
+
+So my plan is: first step/draft
+
+1. Use DACs with pico simulate all the sensors initially and let cells be same
+
+2. Use freertos to implement this in real time
+
+3. shd have following features, a task that reads a config file(prolly) and updates the lookup(or something similar), a task that updates sensor values from that lookup table continuously in real time, a task that logs everything (not really required) 

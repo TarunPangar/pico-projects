@@ -10,6 +10,8 @@
 // Priorities of our threads - higher numbers are higher priority
 #define CLI_TASK_PRIORITY      ( tskIDLE_PRIORITY + 2UL )
 
+#define CLI_BUFFER_LEN	128
+
 extern TaskHandle_t cliHandle;
 
 void vTaskCliComm(__unused void *params);

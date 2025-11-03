@@ -9,6 +9,7 @@
 
 static void handle_command(char *cmd);
 static void blink_led();
+static void print_help();
 
 void system_init()
 {
@@ -45,11 +46,10 @@ void vTaskCliComm(__unused void *params)
 				if (idx > 0) {
 					handle_command(cli_cmd);
 					idx = 0;
+                    printf("\n> ");
 				}
 			} else if (c == 0x7F || c == '\b') {	// Backspace
-				if (idx > 0) {
-					idx--;
-				}
+				if (idx > 0) idx--;
 			} else if (idx < CLI_BUFFER_LEN - 1) {
 				cli_cmd[idx++] = (char)c;
 			}
@@ -58,13 +58,18 @@ void vTaskCliComm(__unused void *params)
     }
 }
 
+static void print_help()
+{
+    printf("Available commands:\n");
+    printf("  help   - Show this message\n");
+    printf("  show   - Show current lookup values\n");
+    printf("  set x y - Set value for sensor x\n");
+}
+
 static void handle_command(char *cmd)
 {
 	if (strcmp(cmd, "help") == 0) {
-		printf("Available commands:\n");
-        printf("  help   - Show this message\n");
-        printf("  show   - Show current lookup values\n");
-        printf("  set x y - Set value for sensor x\n");
+        print_help();
 	} else if (strncmp(cmd, "set ", 4) == 0) {
 		int id; 
 		float val;
@@ -77,5 +82,6 @@ static void handle_command(char *cmd)
 		printf("TODO: implement show current sensors value\n");
 	} else {
 		printf("Unknown command: %s\n", cmd);
+        print_help();
 	}
 }

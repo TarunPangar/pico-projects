@@ -16,6 +16,7 @@ pico_sdk_init()
 add_executable(app 
     src/main.c
     src/tasks/comm_task.c
+    src/tasks/pwm_task.c
 )
 
 target_include_directories(app PRIVATE 
@@ -25,7 +26,12 @@ target_include_directories(app PRIVATE
 )
  
 # pull in common dependencies
-target_link_libraries(app pico_stdlib FreeRTOS-Kernel FreeRTOS-Kernel-Heap4)
+target_link_libraries(app 
+    pico_stdlib
+    FreeRTOS-Kernel
+    FreeRTOS-Kernel-Heap4
+    hardware_pwm
+)
 
 # create map/bin/hex/uf2 file etc.
 pico_add_extra_outputs(app)

@@ -11,13 +11,22 @@ static void handle_command(char *cmd);
 static void blink_led();
 static void print_help();
 
+const char* sensorNames[] = {
+    "NTC_TEMP1",
+    "NTC_TEMP2",
+    "NTC_TEMP3",
+    "CURR_HR",
+    "CURR_LR",
+    "PDU_TEMP"
+};
+
 void system_init()
 {
     stdio_init_all();
     sleep_ms(1000);									// Allow USB serial to initialize
 
-    gpio_init(LED_PIN);
-    gpio_set_dir(LED_PIN, GPIO_OUT);
+//    gpio_init(LED_PIN);
+//    gpio_set_dir(LED_PIN, GPIO_OUT);
 }
 
 static void blink_led()
@@ -39,7 +48,7 @@ void vTaskCliComm(__unused void *params)
 		if (c != PICO_ERROR_TIMEOUT)
         {
 			printf("%c", c);
-			blink_led();							// blink led after reading a char
+//			blink_led();							// blink led after reading a char
 
 			if (c == '\r' || c == '\n') {
 				cli_cmd[idx] = '\0';
@@ -63,7 +72,14 @@ static void print_help()
     printf("Available commands:\n");
     printf("  help   - Show this message\n");
     printf("  show   - Show current lookup values\n");
-    printf("  set x y - Set value for sensor x\n");
+    printf("  set x y - Set value for sensor id=x\n");
+    printf("Available sensors:\n");
+    printf("\t1. NTC_TEMP1\n");
+    printf("\t2. NTC_TEMP2\n");
+    printf("\t3. NTC_TEMP3\n");
+    printf("\t4. CURR_HR\n");
+    printf("\t5. CURR_LR\n");
+    printf("\t6. PDU_TEMP\n");
 }
 
 static void handle_command(char *cmd)
@@ -74,7 +90,7 @@ static void handle_command(char *cmd)
 		int id; 
 		float val;
 		if (sscanf(cmd + 4, "%d %f", &id, &val) == 2) {
-			printf("Set sensor %d with value %.2f\n", id, val);
+			printf("Set sensor %d-%s with value %.2f\n", id, sensorNames[id - 1], val);
 		} else {
 			printf("Usage: set <id> <value>\n");
 		}

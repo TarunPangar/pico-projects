@@ -8,7 +8,7 @@
 #define CLI_TASK_STACK_SIZE configMINIMAL_STACK_SIZE
 
 // Priorities of our threads - higher numbers are higher priority
-#define CLI_TASK_PRIORITY      ( tskIDLE_PRIORITY + 2UL )
+#define CLI_TASK_PRIORITY      ( tskIDLE_PRIORITY + 4UL )
 
 #define CLI_BUFFER_LEN	128
 

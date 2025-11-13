@@ -10,35 +10,28 @@
 #include "common.h"
 
 void on_pwm_wrap() {
-    static int fade = 0;
+    static uint32_t  led = 62500;
+    static uint32_t  gpio1 = MAX_PWM;
+    static uint32_t  gpio2 = MAX_PWM / 2;
     static bool going_up = true;
     // Clear the interrupt flag that brought us here
     pwm_clear_irq(pwm_gpio_to_slice_num(LED_PIN));
+    pwm_clear_irq(pwm_gpio_to_slice_num(GPIO1_PIN));
+    pwm_clear_irq(pwm_gpio_to_slice_num(GPIO2_PIN));
 
-    if (going_up) {
-        ++fade;
-        if (fade > 255) {
-            fade = 255;
-            going_up = false;
-        }
-    } else {
-        --fade;
-        if (fade < 0) {
-            fade = 0;
-            going_up = true;
-        }
-    }
     // Square the fade value to make the LED's brightness appear more linear
     // Note this range matches with the wrap value
-    pwm_set_gpio_level(LED_PIN, fade * fade);
+    pwm_set_gpio_level(LED_PIN, led);
+    pwm_set_gpio_level(GPIO1_PIN,  gpio1);
+    pwm_set_gpio_level(GPIO2_PIN, gpio2);
 }
 
-void pwmLedInit()
+void pwmLedInit(int pins)
 {
     // Tell the LED pin that the PWM is in charge of its value.
-    gpio_set_function(LED_PIN, GPIO_FUNC_PWM);
+    gpio_set_function(pins, GPIO_FUNC_PWM);
     // Figure out which slice we just connected to the LED pin
-    uint slice_num = pwm_gpio_to_slice_num(LED_PIN);
+    uint slice_num = pwm_gpio_to_slice_num(pins);
 
     // Mask our slice's IRQ output into the PWM block's single interrupt line,
     // and register our interrupt handler
@@ -58,7 +51,9 @@ void pwmLedInit()
 
 void vTaskPwmLed(__unused void *params)
 {
-    pwmLedInit();
+    pwmLedInit(LED_PIN);
+    pwmLedInit(GPIO1_PIN);
+    pwmLedInit(GPIO2_PIN);
 
     while(1)
         tight_loop_contents();

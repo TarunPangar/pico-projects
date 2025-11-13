@@ -9,19 +9,24 @@
 #include "pwm_task.h"
 #include "common.h"
 
+uint32_t required_pwm(float volt){
+    return (uint32_t)((volt / MAX_VOLT) * MAX_PWM );
+}
 void on_pwm_wrap() {
     static uint32_t  led = 62500;
     static uint32_t  gpio1 = MAX_PWM;
     static uint32_t  gpio2 = MAX_PWM / 2;
-    static bool going_up = true;
     // Clear the interrupt flag that brought us here
     pwm_clear_irq(pwm_gpio_to_slice_num(LED_PIN));
     pwm_clear_irq(pwm_gpio_to_slice_num(GPIO1_PIN));
     pwm_clear_irq(pwm_gpio_to_slice_num(GPIO2_PIN));
 
-    // Square the fade value to make the LED's brightness appear more linear
+   
     // Note this range matches with the wrap value
-    pwm_set_gpio_level(LED_PIN, led);
+    pwm_set_gpio_level(LED_PIN, required_pwm(3.3));
+    sleep_us(5000000);
+    pwm_set_gpio_level(LED_PIN, required_pwm(0));
+    sleep_us(5000000);
     pwm_set_gpio_level(GPIO1_PIN,  gpio1);
     pwm_set_gpio_level(GPIO2_PIN, gpio2);
 }
@@ -55,6 +60,8 @@ void vTaskPwmLed(__unused void *params)
     pwmLedInit(GPIO1_PIN);
     pwmLedInit(GPIO2_PIN);
 
+    sleep_us(9000000);
+    printf("%d\n" ,  required_pwm(3.3));
     while(1)
         tight_loop_contents();
 }

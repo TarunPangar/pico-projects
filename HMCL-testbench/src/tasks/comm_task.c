@@ -63,11 +63,20 @@ void vTaskCliComm(__unused void *params)
             cli_cmd[idx] = '\0'; // Null-terminate the string
 
             if (idx > 0) {
+                printf("\n");
                 // Process the command
                 process_cli_command(cli_cmd);
             }
 
             // Reset buffer and print new prompt
+            idx = 0;
+            printf("\n> ");
+            // Move to next loop iteration
+            goto next_iteration;
+        }
+
+        // Handle ctrl+c and ctrl+d
+        if (c == 0x03 || c == 0x04) {
             idx = 0;
             printf("\n> ");
             // Move to next loop iteration

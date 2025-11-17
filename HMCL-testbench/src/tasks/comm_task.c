@@ -52,7 +52,7 @@ void vTaskCliComm(__unused void *params)
         if (c == 0x7F || c == '\b') {
             if (idx > 0) {
                 idx--;
-                printf(" ");
+                printf(" \b");
             }
             // Move to next loop iteration
             goto next_iteration;

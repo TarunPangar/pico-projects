@@ -2,9 +2,8 @@
 #define __COMMON_H__
 
 #define LED_PIN     25
-#define GPIO1_PIN   1
-#define GPIO2_PIN   2
 #define MAX_PWM     ((1U << 16) - 1)
+#define MAX_VOLT    3.3f
 
 typedef enum sensor_types {
     NTC_TEMP1 = 1,
